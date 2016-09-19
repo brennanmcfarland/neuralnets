@@ -19,6 +19,7 @@ def graphfunction(xmin,xmax,xres,function,*args):
         x.append(xmin+i*xres)
         y.append(function(x[i],*args))
         i+=1
+    print("goalfunction dim: ",i)
     return [x,y]
 
 def parsefunction(x, functionstring):
@@ -47,7 +48,26 @@ plt.xlim(xmin, xmax)
 
 
 #build the net
-#nn = buildNetwork()
+nn = buildNetwork((xmax-xmin)/xres+1,(xmax-xmin)/xres+3,(xmax-xmin)/xres+1, bias=True, hiddenclass=TanhLayer)
+
+#create the data set (which contains the goal function)
+dataset = SupervisedDataSet(nn.indim, nn.outdim)
+print("dataset dim: ",nn.indim)
+[x,y] = graphfunction(xmin,xmax,xres,parsefunction,sys.argv[1])
+print("x dim: " + str(len(x)) + " y dim: " + str(len(y)))
+dataset.addSample(x,y)
+#i=0
+#while xmin+i*xres<=xmax:
+#    dataset.addSample((xmin+i*xres),(parsefunction(xmin+i*xres,sys.argv[1])))
+#    i=i+1
+
+#create the trainer
+trainer = BackpropTrainer(nn,dataset)
+
+#plot the initial net result
+[x,y] = graphfunction(xmin,xmax,xres,parsefunction,sys.argv[1])
+[x,y] = nn.activate(x,y)
+plt.plot(x,y)
 
 #plot the goal function
 [x,y] = graphfunction(xmin,xmax,xres,parsefunction,sys.argv[1])
