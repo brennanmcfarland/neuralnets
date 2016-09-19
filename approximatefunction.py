@@ -6,6 +6,9 @@ from pybrain.structure import TanhLayer
 import matplotlib.pyplot as plt
 import sys
 import math
+import numpy
+
+"graphs a goal function and then trains a neural net to approximate it"
 
 def graphfunction(xmin,xmax,xres,function,*args):
     "takes a given mathematical function and returns a set of points to graph"
@@ -36,7 +39,18 @@ def parsefunction(x, functionstring):
     #need to get it to work for powers as well
     return eval(functionstring)
 
+#set domain and resolution based on command line input
+xmin = (float)(sys.argv[2])
+xmax = (float)(sys.argv[3])
+xres = (float)(sys.argv[4])
+plt.xlim(xmin, xmax)
 
-[x,y] = graphfunction(0,1,.1,parsefunction,sys.argv[1])
+
+#build the net
+#nn = buildNetwork()
+
+#plot the goal function
+[x,y] = graphfunction(xmin,xmax,xres,parsefunction,sys.argv[1])
 plt.plot(x,y)
+
 plt.show()
